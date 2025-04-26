@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors Arena</title> <!-- Updated Title -->
+    <style>
+        /* --- >>> BODY AND CONTAINER THEME CHANGES START HERE <<< --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* background: linear-gradient(135deg, #74ebd5, #acb6e5); */ /* Old gradient */
+            background: linear-gradient(135deg, #232526 0%, #414345 100%); /* Dark gradient background */
+            /* background-color: #1a1a2e; Dark blueish background */
+            color: #e0e0e0; /* Light default text color for body */
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            min-height: 100vh;
+        }
+
+        .container {
+            /* background-color: #fdfdfd; */ /* Old near-white */
+            background: linear-gradient(145deg, #4a4e5a, #3c404c); /* Dark grey gradient for container */
+            /* background-color: rgba(45, 52, 64, 0.95); Slightly transparent dark slate */
+            border-radius: 15px; /* Adjusted radius */
+            box-shadow:
+                0 0 25px rgba(0, 255, 255, 0.15), /* Subtle cyan outer glow */
+                inset 0 1px 2px rgba(255, 255, 255, 0.1), /* Inner top highlight */
+                inset 0 -1px 1px rgba(0, 0, 0, 0.4); /* Inner bottom shadow */
+            padding: 35px 40px;
+            text-align: center;
+            max-width: 650px; /* Slightly increased max-width */
+            width: 95%;
+            margin-top: 30px; /* Increased margin */
+            border: 1px solid #6a7387; /* Medium grey border */
+            border-top-color: #7b859a; /* Lighter top border */
+            position: relative;
+        }
+        /* --- >>> BODY AND CONTAINER THEME CHANGES END HERE <<< --- */
+
+
+        /* Adjust text colors inside container for dark background */
+        h1 {
+            /* color: #2c3e50; */ /* Old color */
+            color: #00e5ff; /* Bright Cyan/Aqua Title */
+            margin-bottom: 25px;
+            font-size: 2.3em; /* Slightly larger */
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(0, 229, 255, 0.5); /* Glow effect */
+        }
+
+        .score {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 35px;
+            font-size: 1.3em;
+            /* color: #333; */ /* Old color */
+            color: #e0e0e0; /* Light grey text */
+            font-weight: 600;
+            /* background-color: #f8f9fa; */ /* Old background */
+            background-color: rgba(0, 0, 0, 0.2); /* Dark translucent background */
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #555; /* Darker border */
+        }
+         .score span {
+            /* color: #0056b3; */ /* Old color */
+            color: #f0ad4e; /* Orange/Gold score numbers */
+            font-weight: bold;
+         }
+
+        .choices {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 35px;
+        }
+
+        .choice-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        /* Add subtle effect on hover for choices */
+         .choice-btn:hover:not(:disabled) img {
+             box-shadow: 0 0 15px rgba(255, 255, 255, 0.3); /* White glow on image hover */
+         }
+        .choice-btn:hover:not(:disabled) {
+            transform: scale(1.12);
+        }
+
+        .choice-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.45;
+        }
+         .choice-btn:disabled:hover {
+             transform: none;
+         }
+         .choice-btn:disabled:hover img { /* Remove hover glow when disabled */
+             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+         }
+
+        .choice-btn img {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Kept shadow */
+            margin-bottom: 8px;
+            /* background-color: #fff; */ /* Remove white background */
+            background-color: #dbe0e4; /* Light grey bg for icons */
+            border: 2px solid #aaa; /* Adjusted border */
+            transition: box-shadow 0.2s ease-in-out; /* Added for hover effect */
+        }
+
+        .choice-label {
+            font-size: 1em;
+            /* color: #495057; */ /* Old color */
+            color: #b0bec5; /* Lighter grey label */
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .result {
+            min-height: 1.8em;
+            font-size: 1.6em;
+            font-weight: bold;
+            /* color: #17a2b8; */ /* Old color */
+            color: #ffd700; /* Gold color for result */
+            margin-bottom: 25px;
+            animation: fadeInOut 1.2s ease-in-out infinite alternate;
+        }
+        .result.inactive {
+            animation: none;
+            /* color: #333; */ /* Old color */
+             color: #f0f0f0; /* Off-white when showing static result */
+        }
+
+        .hands {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 25px;
+            min-height: 90px;
+        }
+        .hands span { /* VS text */
+             font-size: 1.5em;
+             font-weight: bold;
+             /* color: #dc3545; */ /* Old red */
+             color: #ff4d4d; /* Brighter red */
+             text-shadow: 0 0 5px rgba(255, 77, 77, 0.5);
+        }
+
+        .hand {
+            width: 85px;
+            height: 85px;
+            opacity: 0;
+            transform: translateY(0);
+        }
+        .hand.show {
+             opacity: 1;
+        }
+        .hand.show img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 0 18px rgba(255, 255, 255, 0.4); /* Brighter glow for shown hands */
+            /* background-color: transparent; */
+             background-color: #e8ecef; /* Ensure visible background for shown hands */
+            /* border: 2px solid #ccc; */ /* Old border */
+            border: 2px solid #fff; /* White border for shown hands */
+        }
+
+        .message { /* 'First to 5 points...' text */
+            font-style: normal;
+            /* color: #6c757d; */ /* Old color */
+            color: #9e9e9e; /* Medium grey */
+            margin-top: 15px;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .winner-message {
+            min-height: 2.2em;
+            font-size: 2.1em;
+            font-weight: bold;
+            /* color: #28a745; */ /* Old green */
+            color: #00ff7f; /* Spring Green / Bright Green */
+            margin-bottom: 20px;
+            animation: pulse 1s ease-in-out infinite alternate;
+            text-shadow: 0 0 10px rgba(0, 255, 127, 0.6); /* Green glow */
+        }
+        .winner-message:empty {
+             animation: none;
+             margin-top: 0;
+             margin-bottom: 0;
+             min-height: 0;
+        }
+
+        /* Start New Game Button */
+        .start-new-game-btn {
+            /* background-color: #007bff; */ /* Old blue */
+            background: linear-gradient(145deg, #00aeff, #007bff); /* Blue gradient button */
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px; /* More rounded */
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease; /* Transition all properties */
+            display: none; /* Initially hidden */
+            margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(0, 174, 255, 0.3); /* Button shadow */
+            text-transform: uppercase; /* Uppercase text */
+        }
+        .start-new-game-btn:hover {
+            /* background-color: #0056b3; */
+            background: linear-gradient(145deg, #009ae0, #006acc); /* Darker gradient on hover */
+            transform: scale(1.03) translateY(-2px); /* Slight lift */
+            box-shadow: 0 6px 15px rgba(0, 174, 255, 0.4);
+        }
+        .start-new-game-btn:active {
+             transform: scale(0.99) translateY(0); /* Press down effect */
+             box-shadow: 0 2px 5px rgba(0, 174, 255, 0.2);
+        }
+
+
+        @keyframes fadeInOut { /* Result text pulse */
+            0% { opacity: 0.7; transform: scale(1); text-shadow: 0 0 4px rgba(255,215,0,0.3); }
+            100% { opacity: 1; transform: scale(1.03); text-shadow: 0 0 10px rgba(255,215,0,0.6); }
+        }
+
+        @keyframes pulse { /* Winner text pulse */
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.04); opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container { padding: 25px 20px; border-radius: 15px; }
+            h1 { font-size: 1.9em; }
+            .score { font-size: 1.1em; }
+            .choices { flex-direction: column; align-items: center; }
+            .choice-btn { margin-bottom: 25px; }
+            .choice-btn img { width: 75px; height: 75px; }
+            .hands .hand { width: 75px; height: 75px; }
+            .hands { min-height: 80px; }
+            .result { font-size: 1.4em; min-height: 1.5em; }
+            .winner-message { font-size: 1.8em; min-height: 1.8em; }
+            .choice-label { font-size: 0.9em; }
+            .message { font-size: 1em; }
+            .start-new-game-btn { font-size: 1em; padding: 10px 20px;}
+        }
+         @media (max-width: 400px) {
+             h1 { font-size: 1.7em; }
+             .score { flex-direction: column; gap: 5px; }
+             .choice-btn img { width: 65px; height: 65px; }
+             .hands .hand { width: 65px; height: 65px; }
+             .result { font-size: 1.2em; }
+             .winner-message { font-size: 1.6em; }
+         }
+
+    </style>
+</head>
+<body>
+    <!-- HTML structure remains exactly the same -->
+    <div class="container">
+        <h1>Rock Paper Scissors Arena</h1>
+
+        <div class="score">
+            <div>Player: <span id="player-score">0</span></div>
+            <div>Computer: <span id="computer-score">0</span></div>
+        </div>
+
+        <div class="choices">
+            <button class="choice-btn" data-choice="rock">
+                <img src="rock.png" alt="Rock">
+                <span class="choice-label">Rock</span>
+            </button>
+            <button class="choice-btn" data-choice="paper">
+                <img src="paper.png" alt="Paper">
+                <span class="choice-label">Paper</span>
+            </button>
+            <button class="choice-btn" data-choice="scissors">
+                <img src="scissors.png" alt="Scissors">
+                <span class="choice-label">Scissors</span>
+            </button>
+        </div>
+
+        <div class="hands">
+            <div class="hand" id="player-hand">
+                <img src="" alt="Player's Hand">
+            </div>
+            <span>vs</span>
+            <div class="hand" id="computer-hand">
+                <img src="" alt="Computer's Hand">
+            </div>
+        </div>
+
+        <div class="result" id="result-message">Make your choice!</div>
+        <div class="winner-message" id="winner-message"></div>
+
+        <div class="message">First to 5 points wins the match!</div>
+
+        <button class="start-new-game-btn">Start New Game</button>
+
+    </div>
+
+    <!-- JavaScript remains exactly the same -->
+    <script>
+        const choices = document.querySelectorAll('.choice-btn');
+        const playerScoreElem = document.getElementById('player-score');
+        const computerScoreElem = document.getElementById('computer-score');
+        const playerHandElem = document.getElementById('player-hand');
+        const computerHandElem = document.getElementById('computer-hand');
+        const resultMessageElem = document.getElementById('result-message');
+        const winnerMessageElem = document.getElementById('winner-message');
+        const startNewGameButton = document.querySelector('.start-new-game-btn');
+        const rockImgSrc = 'rock.png';
+        const paperImgSrc = 'paper.png';
+        const scissorsImgSrc = 'scissors.png';
+
+        let playerScore = 0;
+        let computerScore = 0;
+        let gameActive = true;
+
+        startNewGameButton.addEventListener('click', resetGame);
+
+        function getComputerChoice() {
+            const options = ['rock', 'paper', 'scissors'];
+            const randomIndex = Math.floor(Math.random() * options.length);
+            return options [randomIndex];
+        }
+
+        function updateHands(playerChoice, computerChoice) {
+            playerHandElem.querySelector('img').src = getHandImage(playerChoice);
+            computerHandElem.querySelector('img').src = getHandImage(computerChoice);
+            playerHandElem.classList.add('show');
+            computerHandElem.classList.add('show');
+        }
+
+        function getHandImage(choice) {
+            switch (choice) {
+                case 'rock': return rockImgSrc;
+                case 'paper': return paperImgSrc;
+                case 'scissors': return scissorsImgSrc;
+                default: return '';
+            }
+        }
+
+        function determineWinner(playerChoice, computerChoice) {
+            if (playerChoice === computerChoice) {
+                return "It's a tie!";
+            } else if (
+                (playerChoice === 'rock' && computerChoice === 'scissors') ||
+                (playerChoice === 'paper' && computerChoice === 'rock') ||
+                (playerChoice === 'scissors' && computerChoice === 'paper')
+            ) {
+                playerScore++;
+                playerScoreElem.textContent = playerScore;
+                return 'You win!';
+            } else {
+                computerScore++;
+                computerScoreElem.textContent = computerScore;
+                return 'Computer wins!';
+            }
+        }
+
+        function checkGameStatus() {
+            let winnerDeclared = false;
+            if (playerScore >= 5 || computerScore >= 5) {
+                gameActive = false;
+                winnerDeclared = true;
+                resultMessageElem.textContent = '';
+                resultMessageElem.classList.add('inactive');
+                toggleChoiceButtons(false);
+
+                if (playerScore >= 5) {
+                    winnerMessageElem.textContent = 'You are the ultimate winner!';
+                } else {
+                    winnerMessageElem.textContent = 'The computer is the ultimate winner!';
+                }
+
+                startNewGameButton.style.display = 'inline-block';
+            }
+        }
+
+        function toggleChoiceButtons(enable) {
+             choices.forEach(button => {
+                 button.disabled = !enable;
+             });
+        }
+
+        function playGame(playerChoice) {
+            if (!gameActive) {
+                return;
+            }
+            toggleChoiceButtons(false);
+
+            const computerChoice = getComputerChoice();
+            updateHands(playerChoice, computerChoice);
+
+            const result = determineWinner(playerChoice, computerChoice);
+            resultMessageElem.textContent = result;
+            resultMessageElem.classList.add('inactive');
+
+            checkGameStatus();
+
+            if (gameActive) {
+                setTimeout(() => {
+                    playerHandElem.classList.remove('show');
+                    computerHandElem.classList.remove('show');
+                    resultMessageElem.classList.remove('inactive');
+                    resultMessageElem.textContent = 'Make your choice!';
+                    winnerMessageElem.textContent = '';
+                    toggleChoiceButtons(true);
+                }, 3000);
+            }
+        }
+
+        choices.forEach(choice => {
+            choice.addEventListener('click', function() {
+                if(gameActive) {
+                    playGame(this.dataset.choice);
+                }
+            });
+        });
+
+        function resetGame() {
+            playerScore = 0;
+            computerScore = 0;
+            playerScoreElem.textContent = playerScore;
+            computerScoreElem.textContent = computerScore;
+            winnerMessageElem.textContent = '';
+            playerHandElem.classList.remove('show');
+            computerHandElem.classList.remove('show');
+            resultMessageElem.classList.remove('inactive');
+            resultMessageElem.textContent = 'Make your choice!';
+            startNewGameButton.style.display = 'none';
+            gameActive = true;
+            toggleChoiceButtons(true);
+        }
+
+        resultMessageElem.classList.remove('inactive');
+        toggleChoiceButtons(true);
+        startNewGameButton.style.display = 'none';
+
+    </script>
+</body>
+</html>
