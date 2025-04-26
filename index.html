@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock Paper Scissors Arena</title>
     <style>
-        /* --- Base styles remain the same as the previous version --- */
+        /* Base styles remain the same */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
@@ -14,11 +14,10 @@
             background: linear-gradient(135deg, #232526 0%, #414345 100%);
             color: #e0e0e0;
             margin: 0;
-            padding: 10px; /* Reduced body padding slightly */
+            padding: 10px;
             box-sizing: border-box;
             min-height: 100vh;
-            /* Add overflow: hidden; ONLY if absolutely necessary and testing shows minor overflow */
-            /* overflow-y: hidden; */
+            /* Removing overflow and max-height - aiming for natural fit */
         }
 
         .container {
@@ -28,44 +27,44 @@
                 0 0 25px rgba(0, 255, 255, 0.15),
                 inset 0 1px 2px rgba(255, 255, 255, 0.1),
                 inset 0 -1px 1px rgba(0, 0, 0, 0.4);
-            padding: 25px 20px; /* Adjusted padding */
+            padding: 25px 20px;
             text-align: center;
             max-width: 650px;
-            width: 95%; /* Slightly reduced width */
-            margin-top: 15px; /* Reduced margin */
+            width: 95%;
+            margin-top: 15px;
             border: 1px solid #6a7387;
             border-top-color: #7b859a;
             position: relative;
-            display: flex; /* Use flexbox for container children */
-            flex-direction: column; /* Stack children vertically */
-            justify-content: space-between; /* Distribute space (helps push button down) */
-            flex-grow: 1; /* Allow container to grow if needed */
-             max-height: calc(100vh - 30px); /* Limit height slightly less than viewport */
-             overflow-y: auto; /* Allow internal scroll ONLY if content absolutely overflows max-height */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Changed from space-between */
+            flex-grow: 1;
+            /* Removed max-height and overflow-y */
         }
 
         /* Adjust text colors inside container for dark background */
         h1 {
             color: #00e5ff;
-            margin-top: 0; /* Remove default top margin */
-            margin-bottom: 15px; /* Reduced margin */
-            font-size: 1.8em; /* Reduced base font size */
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.8em;
             font-weight: bold;
             text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+            flex-shrink: 0; /* Prevent shrinking */
         }
 
         .score {
             display: flex;
             justify-content: space-around;
-            margin-bottom: 20px; /* Reduced margin */
-            font-size: 1.1em; /* Reduced base font size */
+            margin-bottom: 20px;
+            font-size: 1.1em;
             color: #e0e0e0;
             font-weight: 600;
             background-color: rgba(0, 0, 0, 0.2);
-            padding: 10px; /* Reduced padding */
+            padding: 10px;
             border-radius: 8px;
             border: 1px solid #555;
-            flex-shrink: 0; /* Prevent score from shrinking */
+            flex-shrink: 0;
         }
          .score span {
             color: #f0ad4e;
@@ -76,15 +75,17 @@
             display: flex;
             justify-content: space-around;
             align-items: center;
-            margin-bottom: 20px; /* Reduced margin */
-            flex-shrink: 0; /* Prevent choices from shrinking */
+            margin-bottom: 20px;
+            flex-shrink: 0;
+            /* Ensure it takes minimal necessary height */
+            /* height: auto; */
         }
 
         .choice-btn {
             background: none;
             border: none;
             cursor: pointer;
-            padding: 5px; /* Reduced padding */
+            padding: 5px;
             transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
             display: flex;
             flex-direction: column;
@@ -110,31 +111,31 @@
          }
 
         .choice-btn img {
-            width: 70px; /* Reduced base size */
-            height: 70px; /* Reduced base size */
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            margin-bottom: 5px; /* Reduced margin */
+            margin-bottom: 5px;
             background-color: #dbe0e4;
             border: 2px solid #aaa;
             transition: box-shadow 0.2s ease-in-out;
         }
 
         .choice-label {
-            font-size: 0.9em; /* Reduced base font size */
+            font-size: 0.9em;
             color: #b0bec5;
             font-weight: 600;
-            margin-top: 5px; /* Reduced margin */
+            margin-top: 5px;
         }
 
         .result {
-            min-height: 1.5em; /* Reduced min-height */
-            font-size: 1.4em; /* Reduced base font size */
+            min-height: 1.5em;
+            font-size: 1.4em;
             font-weight: bold;
             color: #ffd700;
-            margin-bottom: 15px; /* Reduced margin */
+            margin-bottom: 15px;
             animation: fadeInOut 1.2s ease-in-out infinite alternate;
-            flex-shrink: 0; /* Prevent result from shrinking */
+            flex-shrink: 0;
         }
         .result.inactive {
             animation: none;
@@ -145,19 +146,19 @@
             display: flex;
             justify-content: space-around;
             align-items: center;
-            margin-bottom: 15px; /* Reduced margin */
-            min-height: 75px; /* Reduced base min-height */
-            flex-shrink: 0; /* Prevent hands display from shrinking */
+            margin-bottom: 15px;
+            min-height: 75px;
+            flex-shrink: 0;
         }
         .hands span { /* VS text */
-             font-size: 1.3em; /* Reduced base font size */
+             font-size: 1.3em;
              font-weight: bold;
              color: #ff4d4d;
              text-shadow: 0 0 5px rgba(255, 77, 77, 0.5);
         }
 
         .hand {
-            width: 70px; /* Match reduced choice image size */
+            width: 70px;
             height: 70px;
             opacity: 0;
             transform: translateY(0);
@@ -177,21 +178,21 @@
         .message { /* 'First to 5 points...' text */
             font-style: normal;
             color: #9e9e9e;
-            margin-top: 10px; /* Reduced margin */
-            font-size: 0.95em; /* Reduced base font size */
-            margin-bottom: 15px; /* Reduced margin */
-            flex-shrink: 0; /* Prevent message from shrinking */
+            margin-top: 10px;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+            flex-shrink: 0;
         }
 
         .winner-message {
-            min-height: 1.8em; /* Reduced min-height */
-            font-size: 1.7em; /* Reduced base font size */
+            min-height: 1.8em;
+            font-size: 1.7em;
             font-weight: bold;
             color: #00ff7f;
-            margin-bottom: 15px; /* Reduced margin */
+            margin-bottom: 15px;
             animation: pulse 1s ease-in-out infinite alternate;
             text-shadow: 0 0 10px rgba(0, 255, 127, 0.6);
-            flex-shrink: 0; /* Prevent winner message from shrinking */
+            flex-shrink: 0;
         }
         .winner-message:empty {
              animation: none;
@@ -205,17 +206,18 @@
             background: linear-gradient(145deg, #00aeff, #007bff);
             color: white;
             border: none;
-            padding: 10px 20px; /* Reduced padding */
+            padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1em; /* Reduced base font size */
+            font-size: 1em;
             font-weight: bold;
             transition: all 0.3s ease;
             display: none; /* Initially hidden */
-            margin-top: 10px; /* Reduced margin */
+            margin-top: auto; /* Push button towards bottom */
+            margin-bottom: 5px; /* Small margin at bottom */
             box-shadow: 0 4px 10px rgba(0, 174, 255, 0.3);
             text-transform: uppercase;
-            flex-shrink: 0; /* Prevent button from shrinking */
+            flex-shrink: 0;
         }
         .start-new-game-btn:hover {
             background: linear-gradient(145deg, #009ae0, #006acc);
@@ -239,93 +241,113 @@
         }
 
 
-        /* --- >>> MOBILE RESPONSIVE ADJUSTMENTS START HERE <<< --- */
+        /* MOBILE RESPONSIVE ADJUSTMENTS */
         @media (max-width: 600px) {
             body {
-                padding: 5px; /* Further reduce body padding */
+                padding: 5px;
             }
             .container {
-                padding: 15px 10px; /* Further reduce container padding */
+                padding: 15px 10px;
                 margin-top: 10px;
-                max-height: calc(100vh - 20px); /* Adjust max height */
             }
             h1 {
-                font-size: 1.5em; /* Smaller title */
+                font-size: 1.5em;
                 margin-bottom: 10px;
             }
             .score {
-                font-size: 0.95em; /* Smaller score text */
-                margin-bottom: 15px;
+                font-size: 0.95em;
+                margin-bottom: 10px; /* Reduced bottom margin */
                 padding: 8px;
-                 flex-direction: column; /* Stack Player/Computer scores */
-                 gap: 3px; /* Space between stacked scores */
+                 flex-direction: column;
+                 gap: 3px;
             }
             .choices {
-                flex-direction: column; /* Stack choices vertically */
+                flex-direction: column;
                 align-items: center;
-                margin-bottom: 15px;
-                 gap: 10px; /* Space between stacked choices */
+                margin-bottom: 15px; /* Spacing when visible */
+                 gap: 10px;
             }
             .choice-btn {
-                margin-bottom: 0; /* Remove bottom margin as gap is used */
+                margin-bottom: 0;
                 padding: 3px;
             }
             .choice-btn img {
-                width: 60px; /* Smaller images */
+                width: 60px;
                 height: 60px;
                 margin-bottom: 3px;
             }
             .choice-label {
-                font-size: 0.8em; /* Smaller label */
+                font-size: 0.8em;
                 margin-top: 3px;
             }
             .hands {
-                min-height: 65px; /* Smaller hands area */
-                margin-bottom: 10px;
+                min-height: 65px;
+                margin-bottom: 10px; /* Reduced margin */
             }
             .hands .hand {
-                width: 60px; /* Smaller hands */
+                width: 60px;
                 height: 60px;
             }
-             .hands span { /* VS text */
+             .hands span {
                  font-size: 1.1em;
             }
             .result {
-                font-size: 1.2em; /* Smaller result */
+                font-size: 1.2em;
                 min-height: 1.3em;
-                margin-bottom: 10px;
+                margin-bottom: 10px; /* Reduced margin */
             }
             .winner-message {
-                font-size: 1.5em; /* Smaller winner message */
+                font-size: 1.5em;
                 min-height: 1.6em;
-                margin-bottom: 10px;
+                margin-bottom: 10px; /* Reduced margin */
             }
             .message {
-                font-size: 0.85em; /* Smaller message */
+                font-size: 0.85em;
                 margin-top: 5px;
-                margin-bottom: 10px;
+                margin-bottom: 10px; /* Reduced margin */
             }
             .start-new-game-btn {
                 font-size: 0.9em;
                 padding: 8px 15px;
-                margin-top: 8px;
+                /* margin-top: 8px; /* Let auto handle top margin */
             }
+
+            /* --- >>> HIDE CHOICES WHEN GAME OVER <<< --- */
+            .game-over .choices {
+                display: none;
+                margin-bottom: 0;
+                gap: 0;
+            }
+             /* Optional: Slightly reduce space between score and hands when choices are hidden */
+             .game-over .score {
+                  margin-bottom: 5px;
+             }
+
         }
 
         @media (max-width: 400px) {
-             /* Further minor adjustments for very small screens if needed */
              h1 { font-size: 1.3em; }
              .choice-btn img { width: 55px; height: 55px; }
              .hands .hand { width: 55px; height: 55px; }
              .result { font-size: 1.1em; }
              .winner-message { font-size: 1.4em; }
              .message { font-size: 0.8em;}
+
+             /* Ensure choices are hidden here too */
+            .game-over .choices {
+                display: none;
+                margin-bottom: 0;
+                gap: 0;
+            }
+             .game-over .score {
+                  margin-bottom: 5px;
+             }
         }
-        /* --- >>> MOBILE RESPONSIVE ADJUSTMENTS END HERE <<< --- */
+        /* END MOBILE RESPONSIVE ADJUSTMENTS */
 
     </style>
 </head>
-<body>
+<body > <!-- Class 'game-over' will be added/removed here -->
     <!-- HTML structure remains exactly the same -->
     <div class="container">
         <h1>Rock Paper Scissors Arena</h1>
@@ -369,7 +391,7 @@
 
     </div>
 
-    <!-- JavaScript remains exactly the same -->
+    <!-- JavaScript Includes the two added lines -->
     <script>
         const choices = document.querySelectorAll('.choice-btn');
         const playerScoreElem = document.getElementById('player-score');
@@ -445,6 +467,8 @@
                 }
 
                 startNewGameButton.style.display = 'inline-block';
+                document.body.classList.add('game-over'); // Add class to body
+
             }
         }
 
@@ -502,11 +526,14 @@
             startNewGameButton.style.display = 'none';
             gameActive = true;
             toggleChoiceButtons(true);
+            document.body.classList.remove('game-over'); // Remove class from body
         }
 
+        // Initial setup
         resultMessageElem.classList.remove('inactive');
         toggleChoiceButtons(true);
         startNewGameButton.style.display = 'none';
+         document.body.classList.remove('game-over'); // Ensure class is not present on load
 
     </script>
 </body>
