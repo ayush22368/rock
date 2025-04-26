@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock Paper Scissors Arena</title>
     <style>
-        /* Base styles remain the same */
+        /* --- Base styles --- */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
@@ -17,7 +17,6 @@
             padding: 10px;
             box-sizing: border-box;
             min-height: 100vh;
-            /* Removing overflow and max-height - aiming for natural fit */
         }
 
         .container {
@@ -34,23 +33,21 @@
             margin-top: 15px;
             border: 1px solid #6a7387;
             border-top-color: #7b859a;
-            position: relative;
+            position: relative; /* Needed for absolute positioning of overlay */
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* Changed from space-between */
+            justify-content: flex-start;
             flex-grow: 1;
-            /* Removed max-height and overflow-y */
         }
 
-        /* Adjust text colors inside container for dark background */
         h1 {
             color: #00e5ff;
             margin-top: 0;
-            margin-bottom: 15px;
+            margin-bottom: 25px; /* Increased margin from last request */
             font-size: 1.8em;
             font-weight: bold;
             text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
-            flex-shrink: 0; /* Prevent shrinking */
+            flex-shrink: 0;
         }
 
         .score {
@@ -77,8 +74,6 @@
             align-items: center;
             margin-bottom: 20px;
             flex-shrink: 0;
-            /* Ensure it takes minimal necessary height */
-            /* height: auto; */
         }
 
         .choice-btn {
@@ -184,24 +179,24 @@
             flex-shrink: 0;
         }
 
-        .winner-message {
-            min-height: 1.8em;
+        /* Winner message (default state) */
+        #winner-message {
+            min-height: 1.8em; /* Ensure space even when empty initially */
             font-size: 1.7em;
             font-weight: bold;
             color: #00ff7f;
-            margin-bottom: 15px;
-            animation: pulse 1s ease-in-out infinite alternate;
+            /* margin-bottom: 15px; Don't set here, set only when inside overlay */
             text-shadow: 0 0 10px rgba(0, 255, 127, 0.6);
             flex-shrink: 0;
+            animation: pulse 1s ease-in-out infinite alternate;
         }
-        .winner-message:empty {
-             animation: none;
-             margin-top: 0;
-             margin-bottom: 0;
+        #winner-message:empty {
              min-height: 0;
+             margin-bottom: 0; /* Remove margin if empty */
+             animation: none;
         }
 
-        /* Start New Game Button */
+        /* Start New Game Button (default state) */
         .start-new-game-btn {
             background: linear-gradient(145deg, #00aeff, #007bff);
             color: white;
@@ -212,9 +207,9 @@
             font-size: 1em;
             font-weight: bold;
             transition: all 0.3s ease;
-            display: none; /* Initially hidden */
-            margin-top: auto; /* Push button towards bottom */
-            margin-bottom: 5px; /* Small margin at bottom */
+            display: none; /* Hidden by default (controlled by JS) */
+            margin-top: 15px; /* Default margin when not in overlay */
+            margin-bottom: 5px;
             box-shadow: 0 4px 10px rgba(0, 174, 255, 0.3);
             text-transform: uppercase;
             flex-shrink: 0;
@@ -229,7 +224,56 @@
              box-shadow: 0 2px 5px rgba(0, 174, 255, 0.2);
         }
 
+        /* --- Game Over Overlay --- */
+        .game-over-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(30, 35, 45, 0.7);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: none; /* Hidden by default */
+            justify-content: center; /* Center content vertically */
+            align-items: center; /* Center content horizontally */
+            flex-direction: column; /* Stack message and button */
+            z-index: 10;
+            border-radius: 15px; /* Match container rounding */
+            padding: 20px;
+            box-sizing: border-box;
+        }
 
+        /* --- Styles when game is over --- */
+        .game-over .game-over-overlay {
+            display: flex; /* Show the overlay */
+        }
+
+        /* Style winner message specifically WHEN INSIDE the overlay */
+        .game-over-overlay #winner-message {
+             /* No position/z-index needed */
+             margin-top: 0; /* Reset margin */
+             margin-bottom: 25px; /* Space below message */
+             font-size: 2em; /* Size for overlay */
+             /* Inherits color, text-shadow, etc. */
+             animation: pulse 1s ease-in-out infinite alternate; /* Ensure animation */
+        }
+         .game-over-overlay #winner-message:empty {
+             margin-bottom: 0;
+             min-height: 0;
+             display: none;
+         }
+
+        /* Style Start New Game button specifically WHEN INSIDE the overlay */
+        .game-over-overlay .start-new-game-btn {
+            /* No position/z-index needed */
+            display: inline-block; /* Ensure it's visible */
+            margin-top: 0; /* Reset margin */
+            /* Inherits base button styles */
+        }
+
+
+        /* --- Keyframes --- */
         @keyframes fadeInOut {
             0% { opacity: 0.7; transform: scale(1); text-shadow: 0 0 4px rgba(255,215,0,0.3); }
             100% { opacity: 1; transform: scale(1.03); text-shadow: 0 0 10px rgba(255,215,0,0.6); }
@@ -241,115 +285,62 @@
         }
 
 
-        /* MOBILE RESPONSIVE ADJUSTMENTS */
+        /* --- Mobile adjustments --- */
         @media (max-width: 600px) {
-            body {
-                padding: 5px;
-            }
-            .container {
-                padding: 15px 10px;
-                margin-top: 10px;
-            }
-            h1 {
-                font-size: 1.5em;
-                margin-bottom: 10px;
-            }
-            .score {
-                font-size: 0.95em;
-                margin-bottom: 10px; /* Reduced bottom margin */
-                padding: 8px;
-                 flex-direction: column;
-                 gap: 3px;
-            }
-            .choices {
-                flex-direction: column;
-                align-items: center;
-                margin-bottom: 15px; /* Spacing when visible */
-                 gap: 10px;
-            }
-            .choice-btn {
-                margin-bottom: 0;
-                padding: 3px;
-            }
-            .choice-btn img {
-                width: 60px;
-                height: 60px;
-                margin-bottom: 3px;
-            }
-            .choice-label {
-                font-size: 0.8em;
-                margin-top: 3px;
-            }
-            .hands {
-                min-height: 65px;
-                margin-bottom: 10px; /* Reduced margin */
-            }
-            .hands .hand {
-                width: 60px;
-                height: 60px;
-            }
-             .hands span {
-                 font-size: 1.1em;
-            }
-            .result {
-                font-size: 1.2em;
-                min-height: 1.3em;
-                margin-bottom: 10px; /* Reduced margin */
-            }
-            .winner-message {
-                font-size: 1.5em;
-                min-height: 1.6em;
-                margin-bottom: 10px; /* Reduced margin */
-            }
-            .message {
-                font-size: 0.85em;
-                margin-top: 5px;
-                margin-bottom: 10px; /* Reduced margin */
-            }
-            .start-new-game-btn {
-                font-size: 0.9em;
-                padding: 8px 15px;
-                /* margin-top: 8px; /* Let auto handle top margin */
-            }
+            body { padding: 5px; }
+            .container { padding: 15px 10px; margin-top: 10px; }
+            h1 { font-size: 1.5em; margin-bottom: 15px; } /* Adjusted h1 margin for mobile */
+            .score { font-size: 0.95em; margin-bottom: 15px; padding: 8px; flex-direction: column; gap: 3px; }
+            .choices { flex-direction: column; align-items: center; margin-bottom: 15px; gap: 10px; }
+            .choice-btn { margin-bottom: 0; padding: 3px; }
+            .choice-btn img { width: 60px; height: 60px; margin-bottom: 3px; }
+            .choice-label { font-size: 0.8em; margin-top: 3px; }
+            .hands { min-height: 65px; margin-bottom: 10px; }
+            .hands .hand { width: 60px; height: 60px; }
+            .hands span { font-size: 1.1em; }
+            .result { font-size: 1.2em; min-height: 1.3em; margin-bottom: 10px; }
+            #winner-message { font-size: 1.5em; min-height: 1.6em; margin-bottom: 10px; } /* Base style for mobile */
+            .message { font-size: 0.85em; margin-top: 5px; margin-bottom: 10px; }
+            .start-new-game-btn { font-size: 0.9em; padding: 8px 15px; margin-top: 10px; } /* Base style for mobile */
 
-            /* --- >>> HIDE CHOICES WHEN GAME OVER <<< --- */
-            .game-over .choices {
-                display: none;
-                margin-bottom: 0;
-                gap: 0;
+            /* Adjust overlay elements for mobile */
+            .game-over-overlay #winner-message {
+                 font-size: 1.6em; /* Size in overlay on mobile */
+                 margin-bottom: 20px; /* Spacing in overlay on mobile */
             }
-             /* Optional: Slightly reduce space between score and hands when choices are hidden */
-             .game-over .score {
-                  margin-bottom: 5px;
-             }
-
+            .game-over-overlay .start-new-game-btn {
+                 font-size: 1em; /* Size in overlay on mobile */
+                 padding: 10px 20px;
+            }
         }
 
         @media (max-width: 400px) {
-             h1 { font-size: 1.3em; }
-             .choice-btn img { width: 55px; height: 55px; }
-             .hands .hand { width: 55px; height: 55px; }
-             .result { font-size: 1.1em; }
-             .winner-message { font-size: 1.4em; }
-             .message { font-size: 0.8em;}
+            h1 { font-size: 1.3em; }
+            .choice-btn img { width: 55px; height: 55px; }
+            .hands .hand { width: 55px; height: 55px; }
+            .result { font-size: 1.1em; }
+            #winner-message { font-size: 1.4em; } /* Base style for small mobile */
+            .message { font-size: 0.8em;}
 
-             /* Ensure choices are hidden here too */
-            .game-over .choices {
-                display: none;
-                margin-bottom: 0;
-                gap: 0;
-            }
-             .game-over .score {
-                  margin-bottom: 5px;
+            /* Adjust overlay elements for small mobile */
+            .game-over-overlay #winner-message {
+                 font-size: 1.4em; /* Size in overlay on small mobile */
+                 margin-bottom: 15px; /* Spacing in overlay on small mobile */
              }
+            .game-over-overlay .start-new-game-btn {
+                 font-size: 0.9em; /* Size in overlay on small mobile */
+                 padding: 9px 18px;
+            }
         }
-        /* END MOBILE RESPONSIVE ADJUSTMENTS */
+        /* --- END MOBILE --- */
 
     </style>
+    <!-- End of head -->
 </head>
 <body > <!-- Class 'game-over' will be added/removed here -->
-    <!-- HTML structure remains exactly the same -->
+
     <div class="container">
+        <!-- h1, score, choices, hands, result -->
         <h1>Rock Paper Scissors Arena</h1>
 
         <div class="score">
@@ -383,15 +374,22 @@
         </div>
 
         <div class="result" id="result-message">Make your choice!</div>
+
+        <!-- Winner message -->
         <div class="winner-message" id="winner-message"></div>
 
+        <!-- Message -->
         <div class="message">First to 5 points wins the match!</div>
 
+        <!-- Button -->
         <button class="start-new-game-btn">Start New Game</button>
 
-    </div>
+        <!-- Overlay -->
+        <div class="game-over-overlay"></div>
 
-    <!-- JavaScript Includes the two added lines -->
+    </div> <!-- End of container -->
+
+    <!-- JavaScript Includes element moving logic -->
     <script>
         const choices = document.querySelectorAll('.choice-btn');
         const playerScoreElem = document.getElementById('player-score');
@@ -399,9 +397,12 @@
         const playerHandElem = document.getElementById('player-hand');
         const computerHandElem = document.getElementById('computer-hand');
         const resultMessageElem = document.getElementById('result-message');
-        const winnerMessageElem = document.getElementById('winner-message');
+        const winnerMessageElem = document.getElementById('winner-message'); // Select by ID
         const startNewGameButton = document.querySelector('.start-new-game-btn');
-        const rockImgSrc = 'rock.png';
+        const container = document.querySelector('.container'); // Get container element
+        const messageElem = document.querySelector('.message'); // Get the info message element
+        const gameOverOverlay = document.querySelector('.game-over-overlay'); // Get the overlay
+        const rockImgSrc = 'rock.png'; // Make sure these images exist
         const paperImgSrc = 'paper.png';
         const scissorsImgSrc = 'scissors.png';
 
@@ -457,7 +458,6 @@
                 gameActive = false;
                 winnerDeclared = true;
                 resultMessageElem.textContent = '';
-                resultMessageElem.classList.add('inactive');
                 toggleChoiceButtons(false);
 
                 if (playerScore >= 5) {
@@ -466,9 +466,12 @@
                     winnerMessageElem.textContent = 'The computer is the ultimate winner!';
                 }
 
-                startNewGameButton.style.display = 'inline-block';
-                document.body.classList.add('game-over'); // Add class to body
+                // Move elements into overlay
+                gameOverOverlay.appendChild(winnerMessageElem);
+                gameOverOverlay.appendChild(startNewGameButton);
 
+                startNewGameButton.style.display = 'inline-block'; // Make button visible
+                document.body.classList.add('game-over'); // Add class to body to trigger overlay CSS
             }
         }
 
@@ -499,9 +502,8 @@
                     computerHandElem.classList.remove('show');
                     resultMessageElem.classList.remove('inactive');
                     resultMessageElem.textContent = 'Make your choice!';
-                    winnerMessageElem.textContent = '';
                     toggleChoiceButtons(true);
-                }, 3000); // Keep original delay
+                }, 3000);
             }
         }
 
@@ -518,12 +520,25 @@
             computerScore = 0;
             playerScoreElem.textContent = playerScore;
             computerScoreElem.textContent = computerScore;
+
+            // Clear text content BEFORE moving
             winnerMessageElem.textContent = '';
+
+            // Move elements back to container in correct order
+            // Append winner message (it will be empty) before the info message
+            container.insertBefore(winnerMessageElem, messageElem);
+            // Append button after the info message
+            // Using insertBefore with null as the second argument is equivalent to appendChild if messageElem is the last child
+            // It's safer to find the overlay and insert before that if structure is complex,
+            // but insertBefore messageElem.nextSibling works if button should follow message.
+            container.insertBefore(startNewGameButton, messageElem.nextSibling || null);
+
+
             playerHandElem.classList.remove('show');
             computerHandElem.classList.remove('show');
             resultMessageElem.classList.remove('inactive');
             resultMessageElem.textContent = 'Make your choice!';
-            startNewGameButton.style.display = 'none';
+            startNewGameButton.style.display = 'none'; // Hide button logically
             gameActive = true;
             toggleChoiceButtons(true);
             document.body.classList.remove('game-over'); // Remove class from body
@@ -533,7 +548,7 @@
         resultMessageElem.classList.remove('inactive');
         toggleChoiceButtons(true);
         startNewGameButton.style.display = 'none';
-         document.body.classList.remove('game-over'); // Ensure class is not present on load
+        document.body.classList.remove('game-over');
 
     </script>
 </body>
