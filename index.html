@@ -3,72 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rock Paper Scissors Arena</title> <!-- Updated Title -->
+    <title>Rock Paper Scissors Arena</title>
     <style>
-        /* --- >>> BODY AND CONTAINER THEME CHANGES START HERE <<< --- */
+        /* --- Base styles remain the same as the previous version --- */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* background: linear-gradient(135deg, #74ebd5, #acb6e5); */ /* Old gradient */
-            background: linear-gradient(135deg, #232526 0%, #414345 100%); /* Dark gradient background */
-            /* background-color: #1a1a2e; Dark blueish background */
-            color: #e0e0e0; /* Light default text color for body */
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
+            color: #e0e0e0;
             margin: 0;
-            padding: 20px;
+            padding: 10px; /* Reduced body padding slightly */
             box-sizing: border-box;
             min-height: 100vh;
+            /* Add overflow: hidden; ONLY if absolutely necessary and testing shows minor overflow */
+            /* overflow-y: hidden; */
         }
 
         .container {
-            /* background-color: #fdfdfd; */ /* Old near-white */
-            background: linear-gradient(145deg, #4a4e5a, #3c404c); /* Dark grey gradient for container */
-            /* background-color: rgba(45, 52, 64, 0.95); Slightly transparent dark slate */
-            border-radius: 15px; /* Adjusted radius */
+            background: linear-gradient(145deg, #4a4e5a, #3c404c);
+            border-radius: 15px;
             box-shadow:
-                0 0 25px rgba(0, 255, 255, 0.15), /* Subtle cyan outer glow */
-                inset 0 1px 2px rgba(255, 255, 255, 0.1), /* Inner top highlight */
-                inset 0 -1px 1px rgba(0, 0, 0, 0.4); /* Inner bottom shadow */
-            padding: 35px 40px;
+                0 0 25px rgba(0, 255, 255, 0.15),
+                inset 0 1px 2px rgba(255, 255, 255, 0.1),
+                inset 0 -1px 1px rgba(0, 0, 0, 0.4);
+            padding: 25px 20px; /* Adjusted padding */
             text-align: center;
-            max-width: 650px; /* Slightly increased max-width */
-            width: 95%;
-            margin-top: 30px; /* Increased margin */
-            border: 1px solid #6a7387; /* Medium grey border */
-            border-top-color: #7b859a; /* Lighter top border */
+            max-width: 650px;
+            width: 95%; /* Slightly reduced width */
+            margin-top: 15px; /* Reduced margin */
+            border: 1px solid #6a7387;
+            border-top-color: #7b859a;
             position: relative;
+            display: flex; /* Use flexbox for container children */
+            flex-direction: column; /* Stack children vertically */
+            justify-content: space-between; /* Distribute space (helps push button down) */
+            flex-grow: 1; /* Allow container to grow if needed */
+             max-height: calc(100vh - 30px); /* Limit height slightly less than viewport */
+             overflow-y: auto; /* Allow internal scroll ONLY if content absolutely overflows max-height */
         }
-        /* --- >>> BODY AND CONTAINER THEME CHANGES END HERE <<< --- */
-
 
         /* Adjust text colors inside container for dark background */
         h1 {
-            /* color: #2c3e50; */ /* Old color */
-            color: #00e5ff; /* Bright Cyan/Aqua Title */
-            margin-bottom: 25px;
-            font-size: 2.3em; /* Slightly larger */
+            color: #00e5ff;
+            margin-top: 0; /* Remove default top margin */
+            margin-bottom: 15px; /* Reduced margin */
+            font-size: 1.8em; /* Reduced base font size */
             font-weight: bold;
-            text-shadow: 0 0 8px rgba(0, 229, 255, 0.5); /* Glow effect */
+            text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
         }
 
         .score {
             display: flex;
             justify-content: space-around;
-            margin-bottom: 35px;
-            font-size: 1.3em;
-            /* color: #333; */ /* Old color */
-            color: #e0e0e0; /* Light grey text */
+            margin-bottom: 20px; /* Reduced margin */
+            font-size: 1.1em; /* Reduced base font size */
+            color: #e0e0e0;
             font-weight: 600;
-            /* background-color: #f8f9fa; */ /* Old background */
-            background-color: rgba(0, 0, 0, 0.2); /* Dark translucent background */
-            padding: 12px;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 10px; /* Reduced padding */
             border-radius: 8px;
-            border: 1px solid #555; /* Darker border */
+            border: 1px solid #555;
+            flex-shrink: 0; /* Prevent score from shrinking */
         }
          .score span {
-            /* color: #0056b3; */ /* Old color */
-            color: #f0ad4e; /* Orange/Gold score numbers */
+            color: #f0ad4e;
             font-weight: bold;
          }
 
@@ -76,23 +76,23 @@
             display: flex;
             justify-content: space-around;
             align-items: center;
-            margin-bottom: 35px;
+            margin-bottom: 20px; /* Reduced margin */
+            flex-shrink: 0; /* Prevent choices from shrinking */
         }
 
         .choice-btn {
             background: none;
             border: none;
             cursor: pointer;
-            padding: 10px;
+            padding: 5px; /* Reduced padding */
             transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
         }
-        /* Add subtle effect on hover for choices */
          .choice-btn:hover:not(:disabled) img {
-             box-shadow: 0 0 15px rgba(255, 255, 255, 0.3); /* White glow on image hover */
+             box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
          }
         .choice-btn:hover:not(:disabled) {
             transform: scale(1.12);
@@ -105,63 +105,60 @@
          .choice-btn:disabled:hover {
              transform: none;
          }
-         .choice-btn:disabled:hover img { /* Remove hover glow when disabled */
+         .choice-btn:disabled:hover img {
              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
          }
 
         .choice-btn img {
-            width: 85px;
-            height: 85px;
+            width: 70px; /* Reduced base size */
+            height: 70px; /* Reduced base size */
             border-radius: 50%;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Kept shadow */
-            margin-bottom: 8px;
-            /* background-color: #fff; */ /* Remove white background */
-            background-color: #dbe0e4; /* Light grey bg for icons */
-            border: 2px solid #aaa; /* Adjusted border */
-            transition: box-shadow 0.2s ease-in-out; /* Added for hover effect */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            margin-bottom: 5px; /* Reduced margin */
+            background-color: #dbe0e4;
+            border: 2px solid #aaa;
+            transition: box-shadow 0.2s ease-in-out;
         }
 
         .choice-label {
-            font-size: 1em;
-            /* color: #495057; */ /* Old color */
-            color: #b0bec5; /* Lighter grey label */
+            font-size: 0.9em; /* Reduced base font size */
+            color: #b0bec5;
             font-weight: 600;
-            margin-top: 8px;
+            margin-top: 5px; /* Reduced margin */
         }
 
         .result {
-            min-height: 1.8em;
-            font-size: 1.6em;
+            min-height: 1.5em; /* Reduced min-height */
+            font-size: 1.4em; /* Reduced base font size */
             font-weight: bold;
-            /* color: #17a2b8; */ /* Old color */
-            color: #ffd700; /* Gold color for result */
-            margin-bottom: 25px;
+            color: #ffd700;
+            margin-bottom: 15px; /* Reduced margin */
             animation: fadeInOut 1.2s ease-in-out infinite alternate;
+            flex-shrink: 0; /* Prevent result from shrinking */
         }
         .result.inactive {
             animation: none;
-            /* color: #333; */ /* Old color */
-             color: #f0f0f0; /* Off-white when showing static result */
+             color: #f0f0f0;
         }
 
         .hands {
             display: flex;
             justify-content: space-around;
             align-items: center;
-            margin-bottom: 25px;
-            min-height: 90px;
+            margin-bottom: 15px; /* Reduced margin */
+            min-height: 75px; /* Reduced base min-height */
+            flex-shrink: 0; /* Prevent hands display from shrinking */
         }
         .hands span { /* VS text */
-             font-size: 1.5em;
+             font-size: 1.3em; /* Reduced base font size */
              font-weight: bold;
-             /* color: #dc3545; */ /* Old red */
-             color: #ff4d4d; /* Brighter red */
+             color: #ff4d4d;
              text-shadow: 0 0 5px rgba(255, 77, 77, 0.5);
         }
 
         .hand {
-            width: 85px;
-            height: 85px;
+            width: 70px; /* Match reduced choice image size */
+            height: 70px;
             opacity: 0;
             transform: translateY(0);
         }
@@ -172,31 +169,29 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            box-shadow: 0 0 18px rgba(255, 255, 255, 0.4); /* Brighter glow for shown hands */
-            /* background-color: transparent; */
-             background-color: #e8ecef; /* Ensure visible background for shown hands */
-            /* border: 2px solid #ccc; */ /* Old border */
-            border: 2px solid #fff; /* White border for shown hands */
+            box-shadow: 0 0 18px rgba(255, 255, 255, 0.4);
+             background-color: #e8ecef;
+            border: 2px solid #fff;
         }
 
         .message { /* 'First to 5 points...' text */
             font-style: normal;
-            /* color: #6c757d; */ /* Old color */
-            color: #9e9e9e; /* Medium grey */
-            margin-top: 15px;
-            font-size: 1.1em;
-            margin-bottom: 20px;
+            color: #9e9e9e;
+            margin-top: 10px; /* Reduced margin */
+            font-size: 0.95em; /* Reduced base font size */
+            margin-bottom: 15px; /* Reduced margin */
+            flex-shrink: 0; /* Prevent message from shrinking */
         }
 
         .winner-message {
-            min-height: 2.2em;
-            font-size: 2.1em;
+            min-height: 1.8em; /* Reduced min-height */
+            font-size: 1.7em; /* Reduced base font size */
             font-weight: bold;
-            /* color: #28a745; */ /* Old green */
-            color: #00ff7f; /* Spring Green / Bright Green */
-            margin-bottom: 20px;
+            color: #00ff7f;
+            margin-bottom: 15px; /* Reduced margin */
             animation: pulse 1s ease-in-out infinite alternate;
-            text-shadow: 0 0 10px rgba(0, 255, 127, 0.6); /* Green glow */
+            text-shadow: 0 0 10px rgba(0, 255, 127, 0.6);
+            flex-shrink: 0; /* Prevent winner message from shrinking */
         }
         .winner-message:empty {
              animation: none;
@@ -207,67 +202,126 @@
 
         /* Start New Game Button */
         .start-new-game-btn {
-            /* background-color: #007bff; */ /* Old blue */
-            background: linear-gradient(145deg, #00aeff, #007bff); /* Blue gradient button */
+            background: linear-gradient(145deg, #00aeff, #007bff);
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 8px; /* More rounded */
+            padding: 10px 20px; /* Reduced padding */
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1.1em;
+            font-size: 1em; /* Reduced base font size */
             font-weight: bold;
-            transition: all 0.3s ease; /* Transition all properties */
+            transition: all 0.3s ease;
             display: none; /* Initially hidden */
-            margin-top: 15px;
-            box-shadow: 0 4px 10px rgba(0, 174, 255, 0.3); /* Button shadow */
-            text-transform: uppercase; /* Uppercase text */
+            margin-top: 10px; /* Reduced margin */
+            box-shadow: 0 4px 10px rgba(0, 174, 255, 0.3);
+            text-transform: uppercase;
+            flex-shrink: 0; /* Prevent button from shrinking */
         }
         .start-new-game-btn:hover {
-            /* background-color: #0056b3; */
-            background: linear-gradient(145deg, #009ae0, #006acc); /* Darker gradient on hover */
-            transform: scale(1.03) translateY(-2px); /* Slight lift */
+            background: linear-gradient(145deg, #009ae0, #006acc);
+            transform: scale(1.03) translateY(-2px);
             box-shadow: 0 6px 15px rgba(0, 174, 255, 0.4);
         }
         .start-new-game-btn:active {
-             transform: scale(0.99) translateY(0); /* Press down effect */
+             transform: scale(0.99) translateY(0);
              box-shadow: 0 2px 5px rgba(0, 174, 255, 0.2);
         }
 
 
-        @keyframes fadeInOut { /* Result text pulse */
+        @keyframes fadeInOut {
             0% { opacity: 0.7; transform: scale(1); text-shadow: 0 0 4px rgba(255,215,0,0.3); }
             100% { opacity: 1; transform: scale(1.03); text-shadow: 0 0 10px rgba(255,215,0,0.6); }
         }
 
-        @keyframes pulse { /* Winner text pulse */
+        @keyframes pulse {
             0% { transform: scale(1); opacity: 0.8; }
             100% { transform: scale(1.04); opacity: 1; }
         }
 
-        /* Responsive Design */
+
+        /* --- >>> MOBILE RESPONSIVE ADJUSTMENTS START HERE <<< --- */
         @media (max-width: 600px) {
-            .container { padding: 25px 20px; border-radius: 15px; }
-            h1 { font-size: 1.9em; }
-            .score { font-size: 1.1em; }
-            .choices { flex-direction: column; align-items: center; }
-            .choice-btn { margin-bottom: 25px; }
-            .choice-btn img { width: 75px; height: 75px; }
-            .hands .hand { width: 75px; height: 75px; }
-            .hands { min-height: 80px; }
-            .result { font-size: 1.4em; min-height: 1.5em; }
-            .winner-message { font-size: 1.8em; min-height: 1.8em; }
-            .choice-label { font-size: 0.9em; }
-            .message { font-size: 1em; }
-            .start-new-game-btn { font-size: 1em; padding: 10px 20px;}
+            body {
+                padding: 5px; /* Further reduce body padding */
+            }
+            .container {
+                padding: 15px 10px; /* Further reduce container padding */
+                margin-top: 10px;
+                max-height: calc(100vh - 20px); /* Adjust max height */
+            }
+            h1 {
+                font-size: 1.5em; /* Smaller title */
+                margin-bottom: 10px;
+            }
+            .score {
+                font-size: 0.95em; /* Smaller score text */
+                margin-bottom: 15px;
+                padding: 8px;
+                 flex-direction: column; /* Stack Player/Computer scores */
+                 gap: 3px; /* Space between stacked scores */
+            }
+            .choices {
+                flex-direction: column; /* Stack choices vertically */
+                align-items: center;
+                margin-bottom: 15px;
+                 gap: 10px; /* Space between stacked choices */
+            }
+            .choice-btn {
+                margin-bottom: 0; /* Remove bottom margin as gap is used */
+                padding: 3px;
+            }
+            .choice-btn img {
+                width: 60px; /* Smaller images */
+                height: 60px;
+                margin-bottom: 3px;
+            }
+            .choice-label {
+                font-size: 0.8em; /* Smaller label */
+                margin-top: 3px;
+            }
+            .hands {
+                min-height: 65px; /* Smaller hands area */
+                margin-bottom: 10px;
+            }
+            .hands .hand {
+                width: 60px; /* Smaller hands */
+                height: 60px;
+            }
+             .hands span { /* VS text */
+                 font-size: 1.1em;
+            }
+            .result {
+                font-size: 1.2em; /* Smaller result */
+                min-height: 1.3em;
+                margin-bottom: 10px;
+            }
+            .winner-message {
+                font-size: 1.5em; /* Smaller winner message */
+                min-height: 1.6em;
+                margin-bottom: 10px;
+            }
+            .message {
+                font-size: 0.85em; /* Smaller message */
+                margin-top: 5px;
+                margin-bottom: 10px;
+            }
+            .start-new-game-btn {
+                font-size: 0.9em;
+                padding: 8px 15px;
+                margin-top: 8px;
+            }
         }
-         @media (max-width: 400px) {
-             h1 { font-size: 1.7em; }
-             .score { flex-direction: column; gap: 5px; }
-             .choice-btn img { width: 65px; height: 65px; }
-             .hands .hand { width: 65px; height: 65px; }
-             .result { font-size: 1.2em; }
-             .winner-message { font-size: 1.6em; }
-         }
+
+        @media (max-width: 400px) {
+             /* Further minor adjustments for very small screens if needed */
+             h1 { font-size: 1.3em; }
+             .choice-btn img { width: 55px; height: 55px; }
+             .hands .hand { width: 55px; height: 55px; }
+             .result { font-size: 1.1em; }
+             .winner-message { font-size: 1.4em; }
+             .message { font-size: 0.8em;}
+        }
+        /* --- >>> MOBILE RESPONSIVE ADJUSTMENTS END HERE <<< --- */
 
     </style>
 </head>
@@ -423,7 +477,7 @@
                     resultMessageElem.textContent = 'Make your choice!';
                     winnerMessageElem.textContent = '';
                     toggleChoiceButtons(true);
-                }, 3000);
+                }, 3000); // Keep original delay
             }
         }
 
